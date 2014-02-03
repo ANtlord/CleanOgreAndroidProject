@@ -1,0 +1,46 @@
+LOCAL_PATH := $(call my-dir)
+    include $(CLEAR_VARS)
+    LOCAL_MODULE    := @PROJECT_NAME
+
+    LOCAL_LDLIBS	:= -landroid -lc -lm -ldl -llog -lEGL -lGLESv2
+    LOCAL_LDLIBS	+= -L@OGRE_ROOT/@ANDROID_BUILD/lib \
+		-L@OGRE_ROOT/AndroidDependencies/lib/@ARMEABI
+
+    LOCAL_LDLIBS	+= -lPlugin_ParticleFXStatic -lPlugin_OctreeSceneManagerStatic -lRenderSystem_GLES2Static -lOgreRTShaderSystemStatic -lOgreOverlayStatic -lOgreTerrainStatic -lOgrePagingStatic -lOgreVolumeStatic -lOgreMainStatic
+    LOCAL_LDLIBS	+= -lzzip -lz -lFreeImage -lfreetype -lOIS \
+					   @OGRE_ROOT/@ANDROID_BUILD/systemlibs/@ARMEABI/libsupc++.a \
+					   @OGRE_ROOT/@ANDROID_BUILD/systemlibs/@ARMEABI/libstdc++.a \
+					   @OGRE_ROOT/@ANDROID_BUILD/SampleBrowserNDK/obj/local/@ARMEABI/libcpufeatures.a
+    LOCAL_STATIC_LIBRARIES := android_native_app_glue cpufeatures
+
+	LOCAL_CFLAGS := -DGL_GLEXT_PROTOTYPES=1 \
+		-I@LOCAL_PATH/include \
+		-I@OGRE_ROOT/@ANDROID_BUILD/include \
+		-I@OGRE_ROOT/OgreMain/include \
+		-I@OGRE_ROOT/RenderSystems/GLES2/include \
+		-I@OGRE_ROOT/RenderSystems/GLES2/include/EGL
+
+	LOCAL_CFLAGS += -I@ANDROID_NDK_ROOT/sources/cpufeatures \
+		-I@OGRE_ROOT/Components/RTShaderSystem/include \
+		-I@OGRE_ROOT/Components/MeshLodGenerator/include \
+		-I@OGRE_ROOT/Components/Overlay/include \
+		-I@OGRE_ROOT/Components/Volume/include \
+		-I@OGRE_ROOT/Components/Terrain/include \
+		-I@OGRE_ROOT/Components/Paging/include
+
+	LOCAL_CFLAGS += -I@OGRE_ROOT/PlugIns/ParticleFX/include \
+		-I@OGRE_ROOT/PlugIns/OctreeSceneManager/include
+
+	LOCAL_CFLAGS += -I@OGRE_ROOT/AndroidDependencies/include \
+		-I@OGRE_ROOT/AndroidDependencies/include/OIS \
+		-I@OGRE_ROOT/@ANDROID_BUILD/Samples/include   
+
+	LOCAL_CFLAGS += -fexceptions -frtti -x c++ -D___ANDROID___ -DANDROID -DZZIP_OMIT_CONFIG_H -DINCLUDE_RTSHADER_SYSTEM=1
+
+        LOCAL_PATH := @LOCAL_PATH
+        LOCAL_SRC_FILES := @SRC 
+
+    include $(BUILD_SHARED_LIBRARY)
+
+    $(call import-module,android/cpufeatures)
+    $(call import-module,android/native_app_glue)
